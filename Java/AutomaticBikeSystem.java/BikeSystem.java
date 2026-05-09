@@ -1,57 +1,59 @@
 public class BikeSystem{
 
-    public static int turnOnBike(int bikeStatus){
+    private int currentSpeed;
+    private int currentGear;
+    private boolean isBikeOn;
 
-        if (bikeStatus ==0){
-            bikeStatus =1;
+    public void turnOnBike(){
+
+        if (!isBikeOn){
+            isBikeOn =true;
+            currentGear =1;
         }
-
-        return bikeStatus;
     }
 
     
-    public static int turnOffBike(int bikeStatus){
+    public void turnOffBike(){
 
-        if (bikeStatus ==1){
-            bikeStatus =0;
+        if (isBikeOn){
+            isBikeOn =false;
+            currentGear =0;
         }
-
-        return bikeStatus;
     }
 
-    public static int accelerate(int bikeStatus, int currentSpeed){
+    public void accelerate(){
 
-        if (bikeStatus ==1){
-            return currentSpeed + 1;
+        if (isBikeOn){
+            currentSpeed +=getCurrentGear();
         }
-        return -1;
     }
     
 
+    public void deccelerate(){
 
-    public static int deccelerate(int bikeStatus, int currentSpeed){
-
-        if (bikeStatus ==1){
-            if (currentSpeed ==0){return -1}
-            return currentSpeed - 1;
+        if (isBikeOn && currentSpeed >0){
+                currentSpeed -=getCurrentGear();
         }
-        return -1;
     }
     
 
-    public static int identifyCurrentGearSpeed(int bikeStatus, int currentSpeed){
+    public void identifyCurrentGearSpeed(){
 
-        if (bikeStatus ==1){
-            if (currentSpeed >0 && currentSpeed <21){return 1;}
-            else if (currentSpeed >20 && currentSpeed <31){return 2;}
-            else if (currentSpeed >30 && currentSpeed <41){return 3;}
-            else{return 4;}
+        if (isBikeOn) {
+            if (currentSpeed >=0 && currentSpeed <= 20) currentGear =1;
+            if (currentSpeed >= 21 && currentSpeed <= 30) currentGear =2;
+            if (currentSpeed >= 31 && currentSpeed <= 40) currentGear =3;
+            if (currentSpeed >= 41) currentGear =4;
         }
-        return -1;
     }
 
+    public int getCurrentSpeed(){return currentSpeed;}
 
+    public int getCurrentGear(){
+        identifyCurrentGearSpeed();
+        return currentGear;
+    }
 
-
+    public boolean getBikeStatus(){return isBikeOn;}    
 
 }

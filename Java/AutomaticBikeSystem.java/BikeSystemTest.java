@@ -1,64 +1,43 @@
-import org.junit.jupiter.api.Test;
+ import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class BikeSystemTest {
 
-public class BikeSystemTest{
-
-
-    @Test
-    public void CheckIfBikeIsOn(){
-        int bikeStatus =0;
-        assertEquals(BikeSystem.turnOnBike(bikeStatus), 1);
-    }
-
-
-    @Test
-    public void CheckIfBikeIsOff(){
-        int bikeStatus =1;
-        assertEquals(BikeSystem.turnOffBike(bikeStatus), 0);
+    @BeforeEach
+    public void setUp(){
+        BikeSystem myBike = new BikeSystem();
     }
 
     @Test
-    public void tesThatSpeedIncreasedByOne_WhenBikeisOn(){
-        int bikeStatus =1;
-        int currentSpeed =0;
-        assertEquals(BikeSystem.accelerate(bikeStatus, currentSpeed), 1);
-    } 
+    public void testTurnOnBike() {
 
-    @Test
-    public void testThatAccelerateMethodReturnsAnError_WhenBikeisOff(){
-        int bikeStatus =0;
-        int currentSpeed =32;
-        assertEquals(BikeSystem.accelerate(bikeStatus, currentSpeed), -1);
-    } 
-
-    @Test
-    public void tesThatSpeedDecreaseByOne_WhenBikeisOn(){
-        int bikeStatus =1;
-        int currentSpeed =32;
-        assertEquals(BikeSystem.deccelerate(bikeStatus, currentSpeed), 31);
-    } 
-
-    @Test
-    public void testThatDecreaseMethodReturnsAnError_WhenBikeisOff(){
-        int bikeStatus =0;
-        int currentSpeed =32;
-        assertEquals(BikeSystem.deccelerate(bikeStatus, currentSpeed), -1);
+        myBike.turnOnBike();
+        assertTrue(myBike.getBikeStatus());
+        assertEquals(1, myBike.getCurrentGear());
     }
 
     @Test
-    public void testThatGearSpeedIsCategorizedProperly(){
-        int bikeStatus =1;
-        int currentSpeed =78;
-        assertEquals(BikeSystem.identifyCurrentGearSpeed(bikeStatus, currentSpeed), 4);
-        currentSpeed =32;
-        assertEquals(BikeSystem.identifyCurrentGearSpeed(bikeStatus, currentSpeed), 3);
-        currentSpeed =27;
-        assertEquals(BikeSystem.identifyCurrentGearSpeed(bikeStatus, currentSpeed), 2);
-        currentSpeed =3;
-        assertEquals(BikeSystem.identifyCurrentGearSpeed(bikeStatus, currentSpeed), 1);
-        bikeStatus =0;
-        assertEquals(BikeSystem.identifyCurrentGearSpeed(bikeStatus, currentSpeed), -1);  
-       
+    public void testAccelerateIncreasesSpeedByGearValue() {
+
+        myBike.turnOnBike();
+        
+        myBike.accelerate();
+        assertEquals(1, myBike.getCurrentSpeed());
+        
+    }
+
+    @Test
+    public void testDecelerateDecreasesSpeedByGearValue() {
+        myBike.turnOnBike();
+        
+        for(int count= 0; count< 22; count++) { myBike.accelerate(); } 
+        
+        int speedBefore = myBike.getCurrentSpeed();
+        int gearBefore = myBike.getCurrentGear();
+        
+        myBike.deccelerate();
+        assertEquals(speedBefore - gearBefore, myBike.getCurrentSpeed());
     }
 }
+

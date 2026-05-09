@@ -1,73 +1,80 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class ACSystemTest {
 
-public class ACIsOffTest{
+    private ACSystem myAc;
 
-    @Test
-    public void CheckIfACIsOn(){
-
-        int expectedValue =1;
-
-        int actualValue =1;
-
-        assertEquals(expectedValue ,actualValue);
+    @BeforeEach
+    public void setUp(){
+        myAc = new ACSystem();
     }
 
     @Test
-    public void CheckIfACIsOff(){
+    public void test_ACStartsAsOff(){
 
-        int expectedValue =0;
+        assertFalse(myAc.isOn());
+    }
 
-        int actualValue =0;
+    @Test
+    public void test_TurnOnAC(){
+        myAc.putOnTheAC();
+        assertTrue(myAc.isOn());
+    }
 
-        assertEquals(expectedValue, actualValue);
+    @Test
+    public void testThatDecreaseTemperature_UpdatesState(){
+
+        myAc.putOnTheAC();
+        myAc.IncreaseTheaCTemperature(); 
+        myAc.decreaseTheaCTemperature();
+        assertEquals(16, myAc.getTemperature());
+    }
+
+    @Test
+    public void testThatTemperatureDoesNotChange_WhenACOff(){
+
+        myAc.decreaseTheaCTemperature();
+        assertEquals(0, myAc.getTemperature());
     }
 
 
     @Test
-    public void checkIfTemperatureReduces(){
+    public void testThatIncreaseToMax(){
 
-
-        int expectedValue =30;
-        int actualValue =30;
-
-        assertEquals(expectedValue, actualValue);
-
-    }
-
-
-    @Test
-    public void checkIfTemperatureDecreasesToTheLowest(){
-
-
-            int expectedValue =16;
-            int actualValue =16;
-
-            assertEquals(expectedValue, actualValue);
-
-        }
-     
-    @Test
-    public void checkIfTemperatureIncreases(){
-
-
-        int expectedValue =30;
-        int actualValue =30;
-
-        assertEquals(expectedValue, actualValue);
-
+        myAc.putOnTheAC();
+        myAc.IncreaseACToMaximumTemperature();
+        assertEquals(31, myAc.getTemperature());
     }
 
     @Test
-    public void checkIfTemperatureIncreasesToTheHighest(){
-
-
-        int expectedValue =30;
-        int actualValue =30;
-
-        assertEquals(expectedValue, actualValue);
-
+    public void testThatTemperatureCannotGoBelow16(){
+        myAc.putOnTheAC();
+        myAc.decreaseTheaCTemperature();
+        assertEquals(16, myAc.getTemperature());
     }
-  
+
+    @Test
+    public void testThatTemperatureCannotGoAbove31(){
+        myAc.putOnTheAC();
+        myAc.IncreaseACToMaximumTemperature();
+        myAc.IncreaseTheaCTemperature();
+        assertEquals(31, myAc.getTemperature()); 
+    }
+    
+    @Test
+    public void test_TurningACOff_ResetTemperatureToZero(){
+        myAc.putOnTheAC();
+        myAc.putOffTheAC();
+        assertEquals(0, myAc.getTemperature());
+    }
+
+    @Test
+    public void test_TurningACOn_SetsToDefault24(){
+        myAc.putOnTheAC();
+        assertEquals(24, myAc.getTemperature());
+    }
+
 }
+
