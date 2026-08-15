@@ -22,7 +22,7 @@ const handleGenerate = async () => {
     const data = await response.json()
     setNumber(data.number)
   } catch (err) {
-    setError('Could not reach the backend. Is it running on port 8000?')
+    setError('ServerError: Could not reach the backend.')
   } finally {
     setLoading(false)
   }
