@@ -7,11 +7,15 @@ function App() {
   const [minValue, setMinValue] = useState(1)
   const [maxValue, setMaxValue] = useState(100)
 
+  const API_BASE = import.meta.env.VITE_API_URL
+
+
+
 const handleGenerate = async () => {
   setLoading(true)
   setError(null)
   try {
-    const response = await fetch(`http://localhost:8000/api/${minValue}/${maxValue}`)
+    const response = await fetch(`${API_BASE}/api/${minValue}/${maxValue}`)
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
     }

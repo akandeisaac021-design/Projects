@@ -5,7 +5,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #700000, #c22f2f, #ec7d3e);
   min-height: 100vh;
 }
 
@@ -20,7 +20,7 @@ body {
 .card {
   background: #ffffff;
   border-radius: 20px;
-  padding: 160px 124px;
+  padding: 120px 80px;
   max-width: 840px;
   width: 100%;
   text-align: center;
