@@ -6,14 +6,14 @@ body {
   margin: 0;
   font-family: 'Segoe UI', system-ui, sans-serif;
   background: linear-gradient(135deg, #700000, #c22f2f, #ec7d3e);
-  min-height: 100vh;
+  min-height: 500vh;
 }
 
 .page {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 75vh;
+  min-height: 50vh;
   padding: 40px;
 }
 
