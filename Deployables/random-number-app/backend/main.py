@@ -20,7 +20,7 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "Random Number API is running. Try GET /api/random"}
+    return {"message": "Random Number API is running. Try GET /api/{minimum}/{maximum}"}
 
 
 @app.get("/api/{minimum}/{maximum}")

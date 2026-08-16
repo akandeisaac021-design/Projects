@@ -15,7 +15,7 @@ const handleGenerate = async () => {
   setLoading(true)
   setError(null)
   try {
-    const response = await fetch(`${API_BASE}/api/${minValue}/${maxValue}`)
+    const response = await fetch(`${API_BASE}/${minValue}/${maxValue}`)
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
     }
