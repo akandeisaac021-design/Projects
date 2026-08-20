@@ -10,7 +10,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://randomnumbergenerator-six.vercel.app",   # corrected to match actual domain
+        "https://randomnumbergenerator-six.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -27,3 +27,12 @@ def root():
 def get_random_number(minimum: int, maximum: int):
     number = random.randint(minimum, maximum)
     return {"number": number}
+
+
+@app.get("/api/choice")
+def get_random_choice(options: str):
+    items = [item.strip() for item in options.split(",") if item.strip()]
+    if not items:
+        return {"error": "No valid options provided"}, 400
+    choice = random.choice(items)
+    return {"choice": choice}
