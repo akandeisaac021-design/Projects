@@ -6,17 +6,21 @@ function App() {
   const [error, setError] = useState(null)
   const [minValue, setMinValue] = useState(1)
   const [maxValue, setMaxValue] = useState(100)
+  const [choices, setChoices] = useState('')
+  const [choiceResult, setChoiceResult] = useState(null)
 
-  const API_BASE = import.meta.env.VITE_API_URL
+
+
+const API_BASE = import.meta.env.VITE_API_URL
 
 
 
-const handleGenerate = async () => {
+const handleGenerateNumber = async () => {
   setLoading(true)
   setError(null)
 
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 8000) // 8s timeout
+  const timeoutId = setTimeout(() => controller.abort(), 20000) // 8s timeout
 
   try {
     const response = await fetch(`${API_BASE}/api/${minValue}/${maxValue}`, {
@@ -35,7 +39,7 @@ const handleGenerate = async () => {
     clearTimeout(timeoutId)
 
     if (err.name === 'AbortError') {
-      setError('Request timed out. The server may be waking up — try again in a moment.')
+      setError('The server is waking up from idle — this can take up to 20 seconds on the first request. Please try again.')
     } else if (!navigator.onLine) {
       setError('You appear to be offline. Check your internet connection.')
     } else {
@@ -46,6 +50,41 @@ const handleGenerate = async () => {
   }
 }
 
+const handleGenerateChoice = async () => {
+  setLoading(true)
+  setError(null)
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 8000)
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/api/choice?options=${encodeURIComponent(choices)}`,
+      { signal: controller.signal }
+    )
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      setError(`Server error (status ${response.status}). Please try again.`)
+      return
+    }
+
+    const data = await response.json()
+    setChoiceResult(data.choice)
+  } catch (err) {
+    clearTimeout(timeoutId)
+
+    if (err.name === 'AbortError') {
+      setError('Request timed out. The server may be waking up — try again in a moment.')
+    } else if (!navigator.onLine) {
+      setError('You appear to be offline. Check your internet connection.')
+    } else {
+      setError('Could not reach the backend. It may be down or unreachable.')
+    }
+  } finally {
+    setLoading(false)
+  }
+}
   return (
     <div className="page">
       <div className="card">
@@ -84,13 +123,26 @@ const handleGenerate = async () => {
           />
         </div>
 
-        <button onClick={handleGenerate} disabled={loading}>
+        <button onClick={handleGenerateNumber} disabled={loading}>
           {loading ? 'Generating...' : 'Generate'}
         </button>
 
         {error && <p className="error">{error}</p>}
       </div>
-    </div>
+
+
+      <button onClick={handleGenerateChoice} disabled={loading || !choices.trim()}>
+        {loading ? 'Picking...' : 'Pick One'}
+      </button>
+
+      {choiceResult !== null && (
+        <div className="result">{choiceResult}</div>
+      )}
+
+      {error && <p className="error">{error}</p>}
+  </div>
+
+
   )
 }
 
