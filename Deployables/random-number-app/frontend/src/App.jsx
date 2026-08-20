@@ -14,15 +14,33 @@ function App() {
 const handleGenerate = async () => {
   setLoading(true)
   setError(null)
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 8000) // 8s timeout
+
   try {
-    const response = await fetch(`${API_BASE}/${minValue}/${maxValue}`)
+    const response = await fetch(`${API_BASE}/api/${minValue}/${maxValue}`, {
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`)
+      setError(`Server error (status ${response.status}). Please try again.`)
+      return
     }
+
     const data = await response.json()
     setNumber(data.number)
   } catch (err) {
-    setError('ServerError: Could not reach the backend.')
+    clearTimeout(timeoutId)
+
+    if (err.name === 'AbortError') {
+      setError('Request timed out. The server may be waking up — try again in a moment.')
+    } else if (!navigator.onLine) {
+      setError('You appear to be offline. Check your internet connection.')
+    } else {
+      setError('Could not reach the backend. It may be down or unreachable.')
+    }
   } finally {
     setLoading(false)
   }
@@ -70,7 +88,7 @@ const handleGenerate = async () => {
           {loading ? 'Generating...' : 'Generate'}
         </button>
 
-        {error && <p className="error">{error}</p>}      
+        {error && <p className="error">{error}</p>}
       </div>
     </div>
   )
